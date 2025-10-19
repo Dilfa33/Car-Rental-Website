@@ -103,6 +103,19 @@ body {
 
 /* Car Cards */
 .car-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.car-card .card-body {
+    flex: 1; /* stretches the body to fill the space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.car-card {
     border: 1px solid #dee2e6;
     border-radius: 12px;
     overflow: hidden;

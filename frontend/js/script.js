@@ -2,7 +2,7 @@
 $(document).ready(function() {
     var app = $.spapp({
         defaultView: "#main",
-        templateDir: "./views/"
+        templateDir: "./frontend/views/"
     });
 
 
