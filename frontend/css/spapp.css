@@ -1,0 +1,16 @@
+main#spapp>section {
+    display: none;
+}
+
+main#spapp>section:last-child {
+    display: block;
+}
+
+
+main#spapp>section:target {
+    display: block;
+}
+
+main#spapp>section:target~*{
+    display: none;
+}
