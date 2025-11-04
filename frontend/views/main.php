@@ -1,0 +1,59 @@
+<div id="home" class="view active">
+  <div class="hero">
+    <div class="container">
+      <h1>Premium Car Rental</h1>
+      <p class="lead">Your journey starts here. Choose from our wide selection of premium vehicles.</p>
+    </div>
+  </div>
+
+  <div class="container my-5">
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-number">1</div>
+          <h4>Wide Selection</h4>
+          <p>From economy to luxury, find the perfect car for your needs</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-number">2</div>
+          <h4>Best Prices</h4>
+          <p>Competitive rates with no hidden fees or surprises</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-number">3</div>
+          <h4>Quick Booking</h4>
+          <p>Reserve your car in minutes with our simple process</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-number">4</div>
+          <h4>Fully Insured</h4>
+          <p>All vehicles with comprehensive insurance coverage</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card mt-5">
+      <h2 class="section-title">Why Choose Us?</h2>
+      <div class="row">
+        <div class="col-lg-8">
+          <p class="lead">We've been serving customers for over 15 years, providing reliable and affordable car rental services.</p>
+          <p>Our fleet is regularly maintained and our staff is dedicated to making your rental experience smooth and hassle-free. Whether you need a car for business or leisure, we have the perfect vehicle waiting for you.</p>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li class="mb-2">✓ 24/7 Customer Support</li>
+            <li class="mb-2">✓ Free Cancellation</li>
+            <li class="mb-2">✓ No Hidden Fees</li>
+            <li class="mb-2">✓ Clean & Sanitized</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
