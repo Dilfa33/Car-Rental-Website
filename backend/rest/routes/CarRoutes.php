@@ -11,6 +11,9 @@
  *     )
  * )
  */
+
+require_once __DIR__ . '/../data/Roles.php';
+
 Flight::route('GET /cars', function() {
     try {
         $cars = Flight::carService()->get_cars();
@@ -81,6 +84,7 @@ Flight::route('GET /cars/@id', function($id){
  * )
  */
 Flight::route('POST /cars', function(){
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     try {
         Flight::json(Flight::carService()->add_car($data));
@@ -125,6 +129,7 @@ Flight::route('POST /cars', function(){
  * )
  */
 Flight::route('PUT /cars/@id', function($id){
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     try {
         Flight::json(Flight::carService()->update_car($id, $data));
@@ -156,6 +161,7 @@ Flight::route('PUT /cars/@id', function($id){
  * )
  */
 Flight::route('DELETE /cars/@id', function($id){
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     try {
         Flight::json(Flight::carService()->delete_car($id));
         Flight::json(['success' => true, 'message' => 'Car deleted successfully']);

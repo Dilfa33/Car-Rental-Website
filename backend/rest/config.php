@@ -25,4 +25,16 @@ class Database {
         return self::$connection;
     }
 }
+
+class Config {
+    public static function JWT_SECRET() {
+        return 'Golf 6 GTD 125kw > passat b8';
+    }
+
+    // JWT Token expiration time (in seconds)
+    // 24 hours = 60 * 60 * 24 = 86400 seconds
+    public static function JWT_EXPIRATION() {
+        return 60 * 60 * 48; // 24 hours - easy to adjust
+    }
+}
 ?>
