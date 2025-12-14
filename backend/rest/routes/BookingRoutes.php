@@ -132,15 +132,16 @@ Flight::route('GET /bookings/@id', function($id){
  */
 Flight::route('POST /bookings', function(){
     $user = Flight::get('user');
+    $data = Flight::request()->data->getData();
 
-    if ($user->role !== 'admin') {
-        Flight::halt(403, 'Access denied: admin only');
+    // Ensure user can only create booking for themselves (unless admin)
+    if ($user->role !== 'admin' && $data['user_id'] != $user->user_id) {
+        Flight::halt(403, 'Access denied: You can only create bookings for yourself');
     }
 
-    $data = Flight::request()->data->getData();
     try {
-        $result = Flight::bookingService()->add($data);
-        Flight::json(['success' => true, 'data' => $result]);
+        $result = Flight::bookingService()->create_booking_with_payment($data);
+        Flight::json($result);
     } catch (Exception $e) {
         Flight::json(['success' => false, 'message' => $e->getMessage()], 500);
     }

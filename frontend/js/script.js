@@ -8,26 +8,46 @@ $(document).ready(function() {
     app.run();
 
     // ========================================
+    // JWT HELPER FUNCTIONS
+    // ========================================
+    function getUserFromToken() {
+        const token = localStorage.getItem('jwt_token');
+        if (!token) return null;
+
+        try {
+            const decoded = jwt_decode(token);
+            // Check if token is expired
+            if (decoded.exp && decoded.exp < Date.now() / 1000) {
+                console.log('Token expired');
+                localStorage.removeItem('jwt_token');
+                return null;
+            }
+            return decoded.user;
+        } catch (e) {
+            console.error('Error decoding JWT:', e);
+            localStorage.removeItem('jwt_token');
+            return null;
+        }
+    }
+
+    // Make it global so other files can use it
+    window.getUserFromToken = getUserFromToken;
+
+    // ========================================
     // UPDATE NAVBAR BASED ON AUTH STATUS
     // ========================================
     function updateNavbar() {
         const token = localStorage.getItem('jwt_token');
-        const userDataStr = localStorage.getItem('user_data');
+        const userData = getUserFromToken();
 
         console.log('Updating navbar... Token exists:', !!token);
 
-        if (!token || !userDataStr) {
+        if (!token || !userData) {
             showGuestNavbar();
         } else {
-            try {
-                const userData = JSON.parse(userDataStr);
-                showAuthenticatedNavbar(userData);
-                // Load balance from database after navbar is rendered
-                updateNavbarBalance();
-            } catch (e) {
-                console.error('Error parsing user data:', e);
-                showGuestNavbar();
-            }
+            showAuthenticatedNavbar(userData);
+            // Load balance from database after navbar is rendered
+            updateNavbarBalance();
         }
     }
 
@@ -80,14 +100,13 @@ $(document).ready(function() {
     // ========================================
     function updateNavbarBalance() {
         const token = localStorage.getItem('jwt_token');
-        const userData = localStorage.getItem('user_data');
+        const userData = getUserFromToken();
 
         if (!token || !userData) {
             return;
         }
 
-        const user = JSON.parse(userData);
-        const userId = user.user_id;
+        const userId = userData.user_id;
 
         $.ajax({
             url: `http://localhost/Car-Rental-Website/backend/rest/users/${userId}`,
@@ -118,7 +137,6 @@ $(document).ready(function() {
         console.log('Logout clicked');
 
         localStorage.removeItem('jwt_token');
-        localStorage.removeItem('user_data');
         updateNavbar();
         window.location.hash = '#main';
         alert('You have been logged out successfully.');
@@ -130,7 +148,7 @@ $(document).ready(function() {
     function checkRouteAccess() {
         const currentHash = window.location.hash.substring(1);
         const token = localStorage.getItem('jwt_token');
-        const userDataStr = localStorage.getItem('user_data');
+        const userData = getUserFromToken();
 
         console.log('Checking route access for:', currentHash);
 
@@ -144,16 +162,9 @@ $(document).ready(function() {
         }
 
         if (adminRoutes.includes(currentHash) && token) {
-            try {
-                const userData = JSON.parse(userDataStr);
-                if (userData.role !== 'admin') {
-                    alert('Access denied. Admin privileges required.');
-                    window.location.hash = '#main';
-                    return false;
-                }
-            } catch (e) {
-                console.error('Error parsing user data:', e);
-                window.location.hash = '#login';
+            if (!userData || userData.role !== 'admin') {
+                alert('Access denied. Admin privileges required.');
+                window.location.hash = '#main';
                 return false;
             }
         }
@@ -289,13 +300,16 @@ $(document).ready(function() {
             success: function(response) {
                 console.log('Login successful:', response);
 
+                // Only store the JWT token
                 localStorage.setItem('jwt_token', response.data.token);
-                localStorage.setItem('user_data', JSON.stringify(response.data.user));
+
+                // Decode to get user info
+                const userData = getUserFromToken();
 
                 updateNavbar(); // This will now also call updateNavbarBalance()
-                alert('Login successful! Welcome back, ' + response.data.user.first_name + '!');
+                alert('Login successful! Welcome back, ' + userData.first_name + '!');
 
-                if (response.data.user.role === 'admin') {
+                if (userData.role === 'admin') {
                     window.location.hash = '#admin';
                 } else {
                     window.location.hash = '#cars';

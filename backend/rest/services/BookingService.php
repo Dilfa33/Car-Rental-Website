@@ -1,13 +1,22 @@
 <?php
 require_once __DIR__ . '/BaseService.php';
 require_once __DIR__ . '/../dao/BookingDao.php';
+require_once __DIR__ . '/TransactionService.php';
+require_once __DIR__ . '/UserService.php';
+require_once __DIR__ . '/CarService.php';
 
 class BookingService extends BaseService {
     private $booking_dao;
+    private $transaction_service;
+    private $user_service;
+    private $car_service;
 
     public function __construct() {
         $this->booking_dao = new BookingDao();
-        parent::__construct(new BookingDao());
+        $this->transaction_service = new TransactionService();
+        $this->user_service = new UserService();
+        $this->car_service = new CarService();
+        parent::__construct($this->booking_dao);
     }
 
     // Get all bookings (admin only)
@@ -92,6 +101,66 @@ class BookingService extends BaseService {
             'end_date' => $new_end_date,
             'status' => 'pending'
         ]);
+    }
+
+    // Create booking with payment transaction
+    public function create_booking_with_payment($data) {
+        // Validate required fields
+        $required = ['user_id', 'car_id', 'start_date', 'end_date', 'total_price'];
+        foreach ($required as $field) {
+            if (!isset($data[$field]) || empty($data[$field])) {
+                throw new Exception("Field '$field' is required.");
+            }
+        }
+
+        $user_id = $data['user_id'];
+        $total_price = floatval($data['total_price']);
+
+        // Check user balance
+        $user = $this->user_service->get_by_id($user_id);
+        if (!$user) {
+            throw new Exception('User not found');
+        }
+
+        if ($user['balance'] < $total_price) {
+            throw new Exception('Insufficient balance. Please add credits to your account.');
+        }
+
+        // Set default status
+        if (!isset($data['status'])) {
+            $data['status'] = 'pending';
+        }
+
+        // Create booking
+        $booking_result = $this->booking_dao->insert($data);
+
+        if (!$booking_result) {
+            throw new Exception('Failed to create booking');
+        }
+
+        // Get the created booking ID
+        $booking_id = $this->booking_dao->getLastInsertId();
+
+        // Create payment transaction (deduct from balance)
+        try {
+            $transaction_result = $this->transaction_service->create_booking_payment(
+                $user_id,
+                $total_price,
+                $booking_id
+            );
+        } catch (Exception $e) {
+            // If payment fails, we should ideally rollback the booking
+            // For now, just throw the error
+            throw new Exception('Booking created but payment failed: ' . $e->getMessage());
+        }
+
+
+        return [
+            'success' => true,
+            'message' => 'Booking created and payment processed successfully',
+            'booking_id' => $booking_id,
+            'new_balance' => $transaction_result['new_balance']
+        ];
     }
 }
 ?>

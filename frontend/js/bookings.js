@@ -16,7 +16,7 @@
         console.log('=== loadBookings function called ===');
 
         const token = localStorage.getItem('jwt_token');
-        const userData = JSON.parse(localStorage.getItem('user_data'));
+        const userData = window.getUserFromToken();
 
         if (!token || !userData) {
             showError('Please login to view bookings');
@@ -38,6 +38,7 @@
 
                 if (response.success && response.data && response.data.length > 0) {
                     displayBookings(response.data);
+                    console.log(response.data);
                 } else {
                     showNoBookings();
                 }

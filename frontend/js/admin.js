@@ -11,7 +11,7 @@
         console.log('Admin page loaded');
 
         // Verify admin role
-        const userData = JSON.parse(localStorage.getItem('user_data'));
+        const userData = window.getUserFromToken();
         if (!userData || userData.role !== 'admin') {
             alert('Access denied. Admin privileges required.');
             window.location.hash = '#main';

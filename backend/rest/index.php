@@ -16,6 +16,7 @@ require_once __DIR__ . '/services/BookingService.php';
 require_once __DIR__ . '/services/UserService.php';
 require_once __DIR__ . '/services/CarReviewService.php';
 require_once __DIR__ . '/services/TransactionService.php';
+require_once __DIR__ . '/services/MaintenanceRecordService.php';
 
 // Load middleware
 require_once __DIR__ . '/../middleware/AuthMiddleware.php';
@@ -31,6 +32,7 @@ Flight::register('bookingService', 'BookingService');
 Flight::register('userService', 'UserService');
 Flight::register('carReviewService', 'CarReviewService');
 Flight::register('transactionService', 'TransactionService');
+Flight::register('maintenanceRecordService', 'MaintenanceRecordService');
 // MIDDLEWARE - Token verification for protected routes
 Flight::before('start', function() {
     // Public routes that don't need authentication
@@ -68,6 +70,7 @@ require_once __DIR__ . '/routes/BookingRoutes.php';
 require_once __DIR__ . '/routes/UserRoutes.php';
 require_once __DIR__ . '/routes/CarReviewRoutes.php';
 require_once __DIR__ . '/routes/TransactionRoutes.php';
+require_once __DIR__ . '/routes/MaintenanceRecordRoutes.php';
 
 // Start FlightPHP
 Flight::start();

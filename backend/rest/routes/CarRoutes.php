@@ -164,7 +164,6 @@ Flight::route('DELETE /cars/@id', function($id){
     Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     try {
         Flight::json(Flight::carService()->delete_car($id));
-        Flight::json(['success' => true, 'message' => 'Car deleted successfully']);
     } catch (Exception $e) {
         Flight::json(['success' => false, 'message' => $e->getMessage()], 500);
     }

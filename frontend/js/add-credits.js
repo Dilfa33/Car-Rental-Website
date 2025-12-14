@@ -5,14 +5,12 @@ window.loadAddCreditsPage = function() {
 
     // Check if user is logged in
     const token = localStorage.getItem('jwt_token');
-    const userData = localStorage.getItem('user_data');
+    const userData = window.getUserFromToken();
 
     if (!token || !userData) {
         window.location.hash = '#login';
         return;
     }
-
-    const user = JSON.parse(userData);
 
     // Load user's current balance and recent transactions
     loadUserBalance();
@@ -26,7 +24,7 @@ window.loadAddCreditsPage = function() {
 };
 
 function loadUserBalance() {
-    const userData = JSON.parse(localStorage.getItem('user_data'));
+    const userData = window.getUserFromToken();
     const userId = userData.user_id;
     const token = localStorage.getItem('jwt_token');
 
@@ -50,7 +48,7 @@ function loadUserBalance() {
 }
 
 function loadRecentTransactions() {
-    const userData = JSON.parse(localStorage.getItem('user_data'));
+    const userData = window.getUserFromToken();
     const userId = userData.user_id;
     const token = localStorage.getItem('jwt_token');
 
