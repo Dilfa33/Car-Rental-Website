@@ -14,53 +14,40 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="frontend/js/jquery.spapp.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <!-- JWT Decode Library -->
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 </head>
 
 <body>
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-  <div class="container d-flex align-items-center">
-    <!-- Dollar amount on small screens -->
-    <span class="d-lg-none me-3 fw-bold fs-5 text-dark">$67</span>
+    <div class="container d-flex align-items-center">
+        <a class="navbar-brand" href="#main">Premium Rental</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <a class="navbar-brand" href="#main">Premium Rental</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto align-items-center">
-        <li class="nav-item"><a class="nav-link" href="#main">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#cars">Cars</a></li>
-        <li class="nav-item"><a class="nav-link" href="#bookings">My bookings</a></li>
-        <li class="nav-item"><a class="nav-link" href="#add-credits">Add Credits</a></li>
-        <li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-        <li class="nav-item"><a class="nav-link" href="#admin">Admin</a></li>
-        <li class="nav-item"><a class="nav-link" href="#login">Login</a></li>
-        <li class="nav-item"><a class="nav-link" href="#register">Register</a></li>
-        <!-- Dollar amount on large screens -->
-        <li class="nav-item ms-lg-3 d-none d-lg-block">
-          <span class="nav-link fw-bold fs-5 text-success">$67</span>
-        </li>
-      </ul>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center" id="dynamicNavbar">
+                <!-- Dynamic navbar items will be inserted here -->
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>
 
 
 <!-- Main SPA Sections -->
 <main id="spapp" role="main">
-  <section id="main" data-load="main.php"></section>
-  <section id="admin" data-load="admin.php"></section>
-  <section id="cars" data-load="cars.php"></section>
-  <section id="login" data-load="login.php"></section>
-  <section id="register" data-load="register.php"></section>
-  <section id="contact" data-load="contact.php"></section>
-  <section id="team" data-load="team.php"></section>
-  <section id="bookings" data-load="bookings.php"></section>
-  <section id="add-credits" data-load="add-credits.php"></section>
+  <section id="main" data-load="main.html"></section>
+  <section id="admin" data-load="admin.html"></section>
+  <section id="cars" data-load="cars.html"></section>
+  <section id="login" data-load="login.html"></section>
+  <section id="register" data-load="register.html"></section>
+  <section id="contact" data-load="contact.html"></section>
+  <section id="team" data-load="team.html"></section>
+  <section id="bookings" data-load="bookings.html"></section>
+  <section id="add-credits" data-load="add-credits.html"></section>
 </main>
 
 <!-- Footer -->
@@ -95,5 +82,9 @@
 
 <!-- Your SPA Script -->
 <script src="frontend/js/script.js"></script>
+<script src="frontend/js/cars.js"></script>
+<script src="frontend/js/bookings.js"></script>
+<script src="frontend/js/admin.js"></script>
+<script src="frontend/js/add-credits.js"></script>
 </body>
 </html>

@@ -49,6 +49,10 @@ class BaseDao {
         return $stmt->execute();
     }
 
+    public function getLastInsertId() {
+        return $this->connection->lastInsertId();
+    }
+
     protected function getPrimaryKey() {
         return 'id';
     }

@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 require __DIR__ . '/../../../vendor/autoload.php';
 
 if($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] == '127.0.0.1'){
-    define('BASE_URL', 'http://localhost/web-programming-2025/backend');
+    define('BASE_URL', 'http://localhost/Car-Rental-Website/backend/rest');
 } else {
     define('BASE_URL', 'https://lobster-app-czvm2.ondigitalocean.app/backend/');
 }

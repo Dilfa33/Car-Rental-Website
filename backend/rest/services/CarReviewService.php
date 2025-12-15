@@ -1,47 +1,62 @@
 <?php
 require_once __DIR__ . '/BaseService.php';
-require_once __DIR__ . '/../dao/CarReviewDao.php';
+require_once __DIR__ . '/../dao/CarreviewDao.php';
 
 class CarReviewService extends BaseService {
+    private $review_dao;
 
     public function __construct() {
-        parent::__construct(new CarReviewDao());
+        $this->review_dao = new CarreviewDao();
+        parent::__construct(new CarreviewDao());
     }
 
-    public function get_reviews() {
-        return $this->dao->getAll();
+    // Get all reviews
+    public function get_all() {
+        return $this->review_dao->getAll();
     }
 
-    public function get_review_by_id($id) {
-        return $this->dao->getById($id);
+    // Get review by ID
+    public function get_by_id($id) {
+        return $this->review_dao->getById($id);
     }
 
-    public function add_review($data) {
-        $required = ['car_id', 'user_id', 'rating'];
-        foreach ($required as $f) {
-            if (!isset($data[$f]) || $data[$f] === '') {
-                throw new Exception("Field '$f' is required.");
+    // Add new review
+    public function add($data) {
+        // Validate rating is between 1-5
+        if (isset($data['rating'])) {
+            if ($data['rating'] < 1 || $data['rating'] > 5) {
+                throw new Exception('Rating must be between 1 and 5');
             }
         }
 
-        if (!is_numeric($data['rating']) || $data['rating'] < 1 || $data['rating'] > 5) {
-            throw new Exception("Rating must be an integer between 1 and 5.");
+        // Ensure required fields
+        if (!isset($data['car_id']) || !isset($data['user_id'])) {
+            throw new Exception('car_id and user_id are required');
         }
 
-        if (!isset($data['comment'])) $data['comment'] = null;
-
-        return $this->dao->insert($data);
+        return $this->review_dao->insert($data);
     }
 
-    public function update_review($id, $data) {
-        if (isset($data['rating']) && (!is_numeric($data['rating']) || $data['rating'] < 1 || $data['rating'] > 5)) {
-            throw new Exception("Rating must be an integer between 1 and 5.");
+    // Update review
+    public function update($id, $data) {
+        // Validate rating if provided
+        if (isset($data['rating'])) {
+            if ($data['rating'] < 1 || $data['rating'] > 5) {
+                throw new Exception('Rating must be between 1 and 5');
+            }
         }
-        return $this->dao->update($id, $data);
+
+        return $this->review_dao->update($id, $data);
     }
 
-    public function delete_review($id) {
-        return $this->dao->delete($id);
+    // Delete review
+    public function delete($id) {
+        return $this->review_dao->delete($id);
+    }
+
+    // Get reviews for specific car
+    public function get_by_car($car_id) {
+        return $this->review_dao->getByCarId($car_id);
     }
 }
 ?>

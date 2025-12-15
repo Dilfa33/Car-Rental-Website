@@ -44,7 +44,12 @@ class CarService extends BaseService {
             $data['mileage'] = 0;
         }
 
-        return $this->dao->insert($data);
+        $result = $this->dao->insert($data);
+        if ($result) {
+            return ['success' => true, 'message' => 'Car added successfully'];
+        } else {
+            throw new Exception('Failed to add car');
+        }
     }
 
     public function update_car($id, $data) {
@@ -58,11 +63,21 @@ class CarService extends BaseService {
             throw new Exception('Year must be between 1900 and 2030.');
         }
 
-        return $this->dao->update($id, $data);
+        $result = $this->dao->update($id, $data);
+        if ($result) {
+            return ['success' => true, 'message' => 'Car updated successfully'];
+        } else {
+            throw new Exception('Failed to update car');
+        }
     }
 
     public function delete_car($id) {
-        return $this->dao->delete($id);
+        $result = $this->dao->delete($id);
+        if ($result) {
+            return ['success' => true, 'message' => 'Car deleted successfully'];
+        } else {
+            throw new Exception('Failed to delete car');
+        }
     }
 }
 ?>
