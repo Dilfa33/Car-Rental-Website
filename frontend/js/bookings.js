@@ -3,7 +3,7 @@
     'use strict';
 
     // API Base URL
-    const API_BASE_URL = 'https://backend-abc123.ondigitalocean.app';
+    const API_BASE_URL = 'https://jellyfish-app-659ha.ondigitalocean.app';
 
     let currentBookingId = null;
     let currentEndDate = null;
