@@ -1,7 +1,7 @@
 // Add Credits Page JavaScript
 
 // API Base URL - change for deployment
-const API_BASE_URL = 'https://jellyfish-app-659ha.ondigitalocean.app';
+const API_BASE_URL = 'https://seashell-app-mqlu9.ondigitalocean.app';
 
 window.loadAddCreditsPage = function() {
     console.log('Add Credits page loaded');

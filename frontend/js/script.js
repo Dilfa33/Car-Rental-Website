@@ -10,7 +10,7 @@ $(document).ready(function() {
     // ========================================
     // API BASE URL - CHANGE THIS FOR DEPLOYMENT
     // ========================================
-    const API_BASE_URL = 'https://jellyfish-app-659ha.ondigitalocean.app';
+    const API_BASE_URL = 'https://seashell-app-mqlu9.ondigitalocean.app';
     // When deployed, change to: 'https://your-backend-url.ondigitalocean.app'
 
     // ========================================

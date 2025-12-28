@@ -3,7 +3,7 @@
     'use strict';
 
     // API Base URL
-    const API_BASE_URL = 'https://jellyfish-app-659ha.ondigitalocean.app';
+    const API_BASE_URL = 'https://seashell-app-mqlu9.ondigitalocean.app';
 
     window.loadCarsPage = function() {
         console.log('Cars page loaded');
