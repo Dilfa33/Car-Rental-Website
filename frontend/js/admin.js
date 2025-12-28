@@ -2,6 +2,9 @@
 (function() {
     'use strict';
 
+    // API Base URL
+    const API_BASE_URL = 'https://backend-abc123.ondigitalocean.app';
+
     // Global state
     let currentDeleteEntity = null;
     let currentDeleteId = null;
@@ -236,7 +239,7 @@
             fuel_type: $('#car_fuel_type').val(),
             daily_rate: parseFloat($('#car_daily_rate').val()),
             availability_status: $('#car_availability_status').val(),
-            mileage: parseInt($('#car_mileage').val()),
+            mileage: parseInt($('#car_mileage').val()) || 0,
             image_url: $('#car_image_url').val()
         };
 
@@ -292,9 +295,16 @@
         $('#user_last_name').val(isEdit ? user.last_name : '');
         $('#user_email').val(isEdit ? user.email : '');
         $('#user_phone').val(isEdit ? user.phone : '');
-        $('#user_password').val('');
-        $('#user_balance').val(isEdit ? user.balance : 0);
         $('#user_role').val(isEdit ? user.role : 'customer');
+        $('#user_balance').val(isEdit ? user.balance : 0);
+
+        if (isEdit) {
+            $('#user_password').attr('placeholder', 'Leave blank to keep current password');
+            $('#user_password').prop('required', false);
+        } else {
+            $('#user_password').attr('placeholder', 'Enter password');
+            $('#user_password').prop('required', true);
+        }
 
         const modal = new bootstrap.Modal(document.getElementById('userModal'));
         modal.show();
@@ -311,8 +321,8 @@
             last_name: $('#user_last_name').val(),
             email: $('#user_email').val(),
             phone: $('#user_phone').val(),
-            balance: parseFloat($('#user_balance').val()),
-            role: $('#user_role').val()
+            role: $('#user_role').val(),
+            balance: parseFloat($('#user_balance').val())
         };
 
         const password = $('#user_password').val();
@@ -528,7 +538,7 @@
         const token = localStorage.getItem('jwt_token');
 
         return $.ajax({
-            url: 'http://localhost/Car-Rental-Website/backend/rest' + endpoint,
+            url: API_BASE_URL + endpoint,
             method: method,
             headers: {
                 'Authentication': token,
@@ -538,7 +548,7 @@
             dataType: 'json'
         }).fail(function(xhr) {
             console.error('API Error:', xhr);
-            console.error('Response Text:', xhr.responseText); // ADD THIS LINE
+            console.error('Response Text:', xhr.responseText);
         });
     }
 
