@@ -2,10 +2,16 @@
 $(document).ready(function() {
     var app = $.spapp({
         defaultView: "#main",
-        templateDir: "./frontend/views/"
+        templateDir: "./views/"  // ← CHANGED: removed "frontend/"
     });
 
     app.run();
+
+    // ========================================
+    // API BASE URL - CHANGE THIS FOR DEPLOYMENT
+    // ========================================
+    const API_BASE_URL = 'https://seashell-app-mqlu9.ondigitalocean.app';
+    // When deployed, change to: 'https://your-backend-url.ondigitalocean.app'
 
     // ========================================
     // JWT HELPER FUNCTIONS
@@ -16,7 +22,6 @@ $(document).ready(function() {
 
         try {
             const decoded = jwt_decode(token);
-            // Check if token is expired
             if (decoded.exp && decoded.exp < Date.now() / 1000) {
                 console.log('Token expired');
                 localStorage.removeItem('jwt_token');
@@ -30,7 +35,6 @@ $(document).ready(function() {
         }
     }
 
-    // Make it global so other files can use it
     window.getUserFromToken = getUserFromToken;
 
     // ========================================
@@ -46,7 +50,6 @@ $(document).ready(function() {
             showGuestNavbar();
         } else {
             showAuthenticatedNavbar(userData);
-            // Load balance from database after navbar is rendered
             updateNavbarBalance();
         }
     }
@@ -109,7 +112,7 @@ $(document).ready(function() {
         const userId = userData.user_id;
 
         $.ajax({
-            url: `http://localhost/Car-Rental-Website/backend/rest/users/${userId}`,
+            url: `${API_BASE_URL}/users/${userId}`,  // ← CHANGED
             method: 'GET',
             headers: {
                 'Authentication': token
@@ -126,7 +129,6 @@ $(document).ready(function() {
         });
     }
 
-    // Make it global so add-credits.js can call it
     window.updateNavbarBalance = updateNavbarBalance;
 
     // ========================================
@@ -255,7 +257,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: 'http://localhost/Car-Rental-Website/backend/rest/auth/register',
+            url: `${API_BASE_URL}/auth/register`,  // ← CHANGED
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
@@ -290,7 +292,7 @@ $(document).ready(function() {
         $('#errorAlert').addClass('d-none');
 
         $.ajax({
-            url: 'http://localhost/Car-Rental-Website/backend/rest/auth/login',
+            url: `${API_BASE_URL}/auth/login`,  // ← CHANGED
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -300,13 +302,11 @@ $(document).ready(function() {
             success: function(response) {
                 console.log('Login successful:', response);
 
-                // Only store the JWT token
                 localStorage.setItem('jwt_token', response.data.token);
 
-                // Decode to get user info
                 const userData = getUserFromToken();
 
-                updateNavbar(); // This will now also call updateNavbarBalance()
+                updateNavbar();
                 alert('Login successful! Welcome back, ' + userData.first_name + '!');
 
                 if (userData.role === 'admin') {
@@ -328,7 +328,7 @@ $(document).ready(function() {
     // ========================================
     updateNavbar();
     checkRouteAccess();
-    loadPageContent(); // Load initial page content
+    loadPageContent();
 
     // ========================================
     // HASH CHANGE HANDLER
@@ -337,6 +337,6 @@ $(document).ready(function() {
         console.log('=== Hash changed ===');
         checkRouteAccess();
         updateNavbar();
-        loadPageContent(); // Load page-specific content
+        loadPageContent();
     });
 });

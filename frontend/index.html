@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Rental</title>
+
+    <!-- CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/spapp.css">
+
+    <!-- JS Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script src="js/jquery.spapp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <div class="container d-flex align-items-center">
+        <a class="navbar-brand" href="#main">Premium Rental</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center" id="dynamicNavbar">
+                <!-- Dynamic navbar items will be inserted here -->
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Main SPA Sections -->
+<main id="spapp" role="main">
+    <section id="main" data-load="main.html"></section>
+    <section id="admin" data-load="admin.html"></section>
+    <section id="cars" data-load="cars.html"></section>
+    <section id="login" data-load="login.html"></section>
+    <section id="register" data-load="register.html"></section>
+    <section id="contact" data-load="contact.html"></section>
+    <section id="team" data-load="team.html"></section>
+    <section id="bookings" data-load="bookings.html"></section>
+    <section id="add-credits" data-load="add-credits.html"></section>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h5>Premium Rental</h5>
+                <p class="text-muted">Your trusted partner for quality car rentals since 2009.</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#main">Home</a></li>
+                    <li><a href="#cars">Available Cars</a></li>
+                    <li><a href="#team">Our Team</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5>Contact Info</h5>
+                <p class="mb-1">Phone: +1 (555) 123-4567</p>
+                <p>Email: info@carrental.com</p>
+            </div>
+        </div>
+        <hr class="bg-secondary">
+        <div class="text-center py-3">
+            <p class="mb-0">&copy; 2025 Premium Rental. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Your SPA Script -->
+<script src="js/script.js"></script>
+<script src="js/cars.js"></script>
+<script src="js/bookings.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/add-credits.js"></script>
+</body>
+</html>

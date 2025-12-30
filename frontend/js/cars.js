@@ -2,13 +2,14 @@
 (function() {
     'use strict';
 
-    // Load cars when page is accessed
+    // API Base URL
+    const API_BASE_URL = 'https://seashell-app-mqlu9.ondigitalocean.app';
+
     window.loadCarsPage = function() {
         console.log('Cars page loaded');
         loadCars();
     };
 
-    // Load cars from API
     function loadCars() {
         const token = localStorage.getItem('jwt_token');
 
@@ -20,7 +21,7 @@
         showLoading();
 
         $.ajax({
-            url: 'http://localhost/Car-Rental-Website/backend/rest/cars',
+            url: `${API_BASE_URL}/cars`,
             method: 'GET',
             headers: {
                 'Authentication': token
@@ -43,7 +44,6 @@
         });
     }
 
-    // Display cars in grid
     function displayCars(cars) {
         const grid = $('#carsGrid');
         grid.empty();
@@ -54,7 +54,6 @@
         });
     }
 
-    // Create individual car card HTML
     function createCarCard(car) {
         const isAvailable = car.availability_status === 'available';
         const statusBadge = isAvailable ? 'bg-success' : 'bg-danger';
@@ -64,10 +63,10 @@
         return `
             <div class="col-md-6 col-lg-4">
                 <div class="card car-card h-100 shadow-sm">
-                    <img src="frontend/assets/imgs/${car.image_url || 'default.jpg'}"
+                    <img src="assets/imgs/${car.image_url || 'default.jpg'}"
                          class="card-img-top"
                          alt="${car.brand} ${car.model}"
-                         onerror="this.src='frontend/assets/imgs/default.jpg'">
+                         onerror="this.src='assets/imgs/default.jpg'">
                     <div class="card-body">
                         <h5 class="card-title">${car.brand} ${car.model}</h5>
                         <p class="text-muted mb-2">
@@ -99,7 +98,6 @@
         `;
     }
 
-    // Handle book car button click
     $(document).on('click', '.book-car-btn', function() {
         const carId = $(this).data('car-id');
         const carName = $(this).data('car-name');
@@ -110,38 +108,30 @@
         openBookingModal(carId, carName, dailyRate);
     });
 
-    // Open booking modal
     function openBookingModal(carId, carName, dailyRate) {
-        // Reset form and alerts
         $('#bookingForm')[0].reset();
         $('#bookingError').addClass('d-none');
         $('#bookingSuccess').addClass('d-none');
         $('#bookingInfo').addClass('d-none');
 
-        // Set car details
         $('#booking_car_id').val(carId);
         $('#booking_daily_rate').val(dailyRate);
         $('#selectedCarName').text(carName);
         $('#selectedCarRate').text('$' + parseFloat(dailyRate).toFixed(2) + '/day');
 
-        // Set minimum date to today
         const today = new Date().toISOString().split('T')[0];
         $('#start_date').attr('min', today);
         $('#end_date').attr('min', today);
 
-        // Reset calculations
         $('#numDays').text('0');
         $('#totalPrice').text('0.00');
 
-        // Load user balance
         loadUserBalance();
 
-        // Show modal
         const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
         modal.show();
     }
 
-    // Load user balance for modal
     function loadUserBalance() {
         const token = localStorage.getItem('jwt_token');
         const userData = window.getUserFromToken();
@@ -149,7 +139,7 @@
         if (!userData) return;
 
         $.ajax({
-            url: `http://localhost/Car-Rental-Website/backend/rest/users/${userData.user_id}`,
+            url: `${API_BASE_URL}/users/${userData.user_id}`,
             method: 'GET',
             headers: {
                 'Authentication': token
@@ -166,7 +156,6 @@
         });
     }
 
-    // Calculate total price when dates change
     $(document).on('change', '#start_date, #end_date', function() {
         const startDate = $('#start_date').val();
         const endDate = $('#end_date').val();
@@ -183,7 +172,6 @@
                 $('#numDays').text(diffDays);
                 $('#totalPrice').text(totalPrice.toFixed(2));
 
-                // Update end date minimum
                 $('#end_date').attr('min', startDate);
             } else {
                 $('#numDays').text('0');
@@ -195,7 +183,6 @@
         }
     });
 
-    // Confirm booking
     $(document).on('click', '#confirmBookingBtn', function() {
         const carId = $('#booking_car_id').val();
         const startDate = $('#start_date').val();
@@ -205,7 +192,6 @@
         const totalPrice = parseFloat($('#totalPrice').text());
         const userBalance = parseFloat($('#userBalanceInModal').text());
 
-        // Validation
         if (!startDate || !endDate) {
             showBookingError('Please select both start and end dates');
             return;
@@ -221,14 +207,13 @@
             return;
         }
 
-        // Disable button
         $('#confirmBookingBtn').prop('disabled', true).text('Processing...');
 
         const token = localStorage.getItem('jwt_token');
         const userData = window.getUserFromToken();
 
         $.ajax({
-            url: 'http://localhost/Car-Rental-Website/backend/rest/bookings',
+            url: `${API_BASE_URL}/bookings`,
             method: 'POST',
             headers: {
                 'Authentication': token,
@@ -249,7 +234,6 @@
                 if (response.success) {
                     showBookingSuccess('Booking created successfully! Redirecting to your bookings...');
 
-                    // Update navbar balance
                     if (typeof window.updateNavbarBalance === 'function') {
                         window.updateNavbarBalance();
                     }
@@ -281,7 +265,6 @@
         $('#bookingError').addClass('d-none');
     }
 
-    // UI Helper Functions
     function showLoading() {
         $('#carsLoading').show();
         $('#carsError').addClass('d-none');

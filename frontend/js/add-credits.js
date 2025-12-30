@@ -1,9 +1,11 @@
 // Add Credits Page JavaScript
 
+// API Base URL - change for deployment
+const API_BASE_URL = 'https://seashell-app-mqlu9.ondigitalocean.app';
+
 window.loadAddCreditsPage = function() {
     console.log('Add Credits page loaded');
 
-    // Check if user is logged in
     const token = localStorage.getItem('jwt_token');
     const userData = window.getUserFromToken();
 
@@ -12,11 +14,9 @@ window.loadAddCreditsPage = function() {
         return;
     }
 
-    // Load user's current balance and recent transactions
     loadUserBalance();
     loadRecentTransactions();
 
-    // Handle form submission
     $('#topUpForm').off('submit').on('submit', function(e) {
         e.preventDefault();
         handleAddCredits();
@@ -29,7 +29,7 @@ function loadUserBalance() {
     const token = localStorage.getItem('jwt_token');
 
     $.ajax({
-        url: `http://localhost/Car-Rental-Website/backend/rest/users/${userId}`,
+        url: `${API_BASE_URL}/users/${userId}`,
         method: 'GET',
         headers: {
             'Authentication': token
@@ -53,7 +53,7 @@ function loadRecentTransactions() {
     const token = localStorage.getItem('jwt_token');
 
     $.ajax({
-        url: `http://localhost/Car-Rental-Website/backend/rest/transactions/user/${userId}`,
+        url: `${API_BASE_URL}/transactions/user/${userId}`,
         method: 'GET',
         headers: {
             'Authentication': token
@@ -76,7 +76,6 @@ function displayRecentTransactions(transactions) {
         return;
     }
 
-    // Show only last 5 transactions
     const recentTransactions = transactions.slice(-5).reverse();
 
     let html = '<ul class="list-unstyled small">';
@@ -121,7 +120,6 @@ function handleAddCredits() {
     const amount = parseFloat($('#amount').val());
     const paymentMethod = $('#method').val();
 
-    // Validate
     if (!amount || amount < 5) {
         showError('Minimum top-up amount is $5.00');
         return;
@@ -132,14 +130,13 @@ function handleAddCredits() {
         return;
     }
 
-    // Show loading state
     setSubmitButtonLoading(true);
     hideMessages();
 
     const token = localStorage.getItem('jwt_token');
 
     $.ajax({
-        url: 'http://localhost/Car-Rental-Website/backend/rest/transactions/add-credits',
+        url: `${API_BASE_URL}/transactions/add-credits`,
         method: 'POST',
         headers: {
             'Authentication': token,
@@ -156,20 +153,15 @@ function handleAddCredits() {
             if (response.success) {
                 showSuccess(`$${amount.toFixed(2)} successfully added to your balance!`);
 
-                // Update balance display on add-credits page
                 if (response.new_balance) {
                     $('#currentBalance').text('$' + parseFloat(response.new_balance).toFixed(2));
                 }
 
-                // Update navbar balance using global function from script.js
                 if (typeof window.updateNavbarBalance === 'function') {
                     window.updateNavbarBalance();
                 }
 
-                // Reset form
                 $('#topUpForm')[0].reset();
-
-                // Reload transactions
                 loadRecentTransactions();
             } else {
                 showError(response.message || 'Failed to add credits');
@@ -199,7 +191,6 @@ function showError(message) {
     $('#creditsError').text(message).removeClass('d-none');
     $('#creditsSuccess').addClass('d-none');
 
-    // Auto-hide after 5 seconds
     setTimeout(() => {
         $('#creditsError').addClass('d-none');
     }, 5000);
@@ -209,7 +200,6 @@ function showSuccess(message) {
     $('#creditsSuccess').text(message).removeClass('d-none');
     $('#creditsError').addClass('d-none');
 
-    // Auto-hide after 5 seconds
     setTimeout(() => {
         $('#creditsSuccess').addClass('d-none');
     }, 5000);

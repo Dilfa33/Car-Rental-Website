@@ -3,23 +3,37 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+// ========================================
+// CORS HEADERS
+// ========================================
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authentication, Authorization");
+
+// Handle preflight OPTIONS requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+// ========================================
+
 // Load Composer autoloader
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 // Load configuration
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/rest/config.php';
 
 // Load services
-require_once __DIR__ . '/services/CarService.php';
-require_once __DIR__ . '/services/AuthService.php';
-require_once __DIR__ . '/services/BookingService.php';
-require_once __DIR__ . '/services/UserService.php';
-require_once __DIR__ . '/services/CarReviewService.php';
-require_once __DIR__ . '/services/TransactionService.php';
-require_once __DIR__ . '/services/MaintenanceRecordService.php';
+require_once __DIR__ . '/rest/services/CarService.php';
+require_once __DIR__ . '/rest/services/AuthService.php';
+require_once __DIR__ . '/rest/services/BookingService.php';
+require_once __DIR__ . '/rest/services/UserService.php';
+require_once __DIR__ . '/rest/services/CarReviewService.php';
+require_once __DIR__ . '/rest/services/TransactionService.php';
+require_once __DIR__ . '/rest/services/MaintenanceRecordService.php';
 
 // Load middleware
-require_once __DIR__ . '/../middleware/AuthMiddleware.php';
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -33,6 +47,7 @@ Flight::register('userService', 'UserService');
 Flight::register('carReviewService', 'CarReviewService');
 Flight::register('transactionService', 'TransactionService');
 Flight::register('maintenanceRecordService', 'MaintenanceRecordService');
+
 // MIDDLEWARE - Token verification for protected routes
 Flight::before('start', function() {
     // Public routes that don't need authentication
@@ -64,13 +79,13 @@ Flight::before('start', function() {
 });
 
 // Load routes
-require_once __DIR__ . '/routes/AuthRoutes.php';
-require_once __DIR__ . '/routes/CarRoutes.php';
-require_once __DIR__ . '/routes/BookingRoutes.php';
-require_once __DIR__ . '/routes/UserRoutes.php';
-require_once __DIR__ . '/routes/CarReviewRoutes.php';
-require_once __DIR__ . '/routes/TransactionRoutes.php';
-require_once __DIR__ . '/routes/MaintenanceRecordRoutes.php';
+require_once __DIR__ . '/rest/routes/AuthRoutes.php';
+require_once __DIR__ . '/rest/routes/CarRoutes.php';
+require_once __DIR__ . '/rest/routes/BookingRoutes.php';
+require_once __DIR__ . '/rest/routes/UserRoutes.php';
+require_once __DIR__ . '/rest/routes/CarReviewRoutes.php';
+require_once __DIR__ . '/rest/routes/TransactionRoutes.php';
+require_once __DIR__ . '/rest/routes/MaintenanceRecordRoutes.php';
 
 // Start FlightPHP
 Flight::start();

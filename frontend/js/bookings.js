@@ -2,16 +2,17 @@
 (function() {
     'use strict';
 
+    // API Base URL
+    const API_BASE_URL = 'https://seashell-app-mqlu9.ondigitalocean.app';
+
     let currentBookingId = null;
     let currentEndDate = null;
 
-    // Load bookings when page is accessed
     window.loadBookingsPage = function() {
         console.log('Bookings page loaded');
         loadBookings();
     };
 
-    // Load bookings from API
     function loadBookings() {
         console.log('=== loadBookings function called ===');
 
@@ -27,7 +28,7 @@
         showLoading();
 
         $.ajax({
-            url: `http://localhost/Car-Rental-Website/backend/rest/bookings/user/${userData.user_id}`,
+            url: `${API_BASE_URL}/bookings/user/${userData.user_id}`,
             method: 'GET',
             headers: {
                 'Authentication': token
@@ -51,7 +52,6 @@
         });
     }
 
-    // Display bookings in table
     function displayBookings(bookings) {
         const tbody = $('#bookingsTableBody');
         tbody.empty();
@@ -65,7 +65,6 @@
         $('#noBookings').addClass('d-none');
     }
 
-    // Create individual booking row
     function createBookingRow(booking, rowNumber) {
         const statusBadge = getStatusBadge(booking.status);
         const isActive = booking.status === 'confirmed' || booking.status === 'pending';
@@ -106,7 +105,6 @@
         `;
     }
 
-    // Get status badge class
     function getStatusBadge(status) {
         switch(status) {
             case 'confirmed': return 'bg-success';
@@ -117,7 +115,6 @@
         }
     }
 
-    // Format date for display
     function formatDate(dateString) {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -127,9 +124,6 @@
         });
     }
 
-    // ========================================
-    // EXTEND BOOKING HANDLERS
-    // ========================================
     $(document).on('click', '.extend-btn', function() {
         currentBookingId = $(this).data('booking-id');
         currentEndDate = $(this).data('end-date');
@@ -138,7 +132,6 @@
 
         $('#currentEndDate').text(formatDate(currentEndDate));
 
-        // Set minimum date to current end date + 1 day
         const minDate = new Date(currentEndDate);
         minDate.setDate(minDate.getDate() + 1);
         $('#newEndDate').attr('min', minDate.toISOString().split('T')[0]);
@@ -161,7 +154,7 @@
         const token = localStorage.getItem('jwt_token');
 
         $.ajax({
-            url: `http://localhost/Car-Rental-Website/backend/rest/bookings/${currentBookingId}/extend`,
+            url: `${API_BASE_URL}/bookings/${currentBookingId}/extend`,
             method: 'PUT',
             headers: {
                 'Authentication': token,
@@ -176,7 +169,7 @@
                 if (response.success) {
                     alert('Booking extended successfully!');
                     bootstrap.Modal.getInstance(document.getElementById('extendModal')).hide();
-                    loadBookings(); // Reload bookings
+                    loadBookings();
                 } else {
                     alert('Failed to extend booking: ' + response.message);
                 }
@@ -188,9 +181,6 @@
         });
     });
 
-    // ========================================
-    // CANCEL BOOKING HANDLER
-    // ========================================
     $(document).on('click', '.cancel-btn', function() {
         const bookingId = $(this).data('booking-id');
 
@@ -203,7 +193,7 @@
         const token = localStorage.getItem('jwt_token');
 
         $.ajax({
-            url: `http://localhost/Car-Rental-Website/backend/rest/bookings/${bookingId}/cancel`,
+            url: `${API_BASE_URL}/bookings/${bookingId}/cancel`,
             method: 'PUT',
             headers: {
                 'Authentication': token
@@ -213,7 +203,7 @@
 
                 if (response.success) {
                     alert('Booking cancelled successfully');
-                    loadBookings(); // Reload bookings
+                    loadBookings();
                 } else {
                     alert('Failed to cancel booking: ' + response.message);
                 }
@@ -225,9 +215,6 @@
         });
     });
 
-    // ========================================
-    // ADD REVIEW HANDLERS
-    // ========================================
     $(document).on('click', '.review-btn', function() {
         currentBookingId = $(this).data('booking-id');
 
@@ -254,7 +241,7 @@
         const token = localStorage.getItem('jwt_token');
 
         $.ajax({
-            url: `http://localhost/Car-Rental-Website/backend/rest/bookings/${currentBookingId}/review`,
+            url: `${API_BASE_URL}/bookings/${currentBookingId}/review`,
             method: 'POST',
             headers: {
                 'Authentication': token,
@@ -281,9 +268,6 @@
         });
     });
 
-    // ========================================
-    // UI HELPER FUNCTIONS
-    // ========================================
     function showLoading() {
         $('#bookingsLoading').show();
         $('#bookingsError').addClass('d-none');
